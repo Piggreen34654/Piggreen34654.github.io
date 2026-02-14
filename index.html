@@ -17,12 +17,10 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             min-height: 100vh;
-            background: radial-gradient(ellipse at center top, 
-                rgba(255, 0, 150, 0.8) 0%, 
-                rgba(200, 0, 100, 0.6) 30%, 
-                rgba(100, 0, 50, 0.4) 60%, 
-                rgba(20, 0, 10, 0.9) 100%);
+            background-image: url('bg/background.png');
             background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
             color: #fff;
             overflow-x: hidden;
             position: relative;
@@ -415,8 +413,8 @@
         musicToggle.addEventListener('click', () => {
             if (isMusicPlaying) {
                 backgroundMusic.pause();
-                musicText.textContent = 'Sound ON';
-                musicIcon.textContent = '🔊';
+                musicText.textContent = 'Sound OFF';
+                musicIcon.textContent = '🔇';
                 musicToggle.classList.remove('active');
                 isMusicPlaying = false;
             } else {
@@ -424,8 +422,8 @@
                 backgroundMusic.play().catch(error => {
                     console.log('CANAL+.mp3');
                 });
-                musicText.textContent = 'Sound OFF';
-                musicIcon.textContent = '🔇';
+                musicText.textContent = 'Sound ON';
+                musicIcon.textContent = '🔊';
                 musicToggle.classList.add('active');
                 isMusicPlaying = true;
             }
