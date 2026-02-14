@@ -64,6 +64,39 @@
             font-weight: 700;
             text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
             letter-spacing: -0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        h1:hover {
+            transform: scale(1.05);
+        }
+
+        h1:active {
+            transform: scale(0.95);
+        }
+
+        .easter-egg-image {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            animation: easterEggFall 2s ease-in forwards;
+            width: 100px;
+            height: 100px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        @keyframes easterEggFall {
+            0% {
+                opacity: 1;
+                transform: translateY(-100px) rotateZ(0deg) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotateZ(360deg) scale(0.5);
+            }
         }
 
         .music-toggle {
@@ -312,7 +345,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>Mon Site</h1>
+            <h1>Piggreen Site</h1>
             <button class="music-toggle" id="musicToggle">
                 <span class="music-icon">🔊</span>
                 <span id="musicText">Sound ON</span>
@@ -434,6 +467,47 @@
                 isMusicPlaying = true;
             }
         });
+
+        // Fonction pour créer un son de clic avec l'API Web Audio
+        function playClickSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            oscillator.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+
+            // Créer et afficher l'image de l'easter egg
+            const easterEgg = document.createElement('div');
+            easterEgg.className = 'easter-egg-image';
+            easterEgg.style.backgroundImage = 'url(https://cdn.merlinsbricks.com/minifigs/mar0201-bl.webp?v=6)';
+            easterEgg.style.left = (Math.random() * (window.innerWidth - 100)) + 'px';
+            easterEgg.style.top = '-100px';
+            
+            document.body.appendChild(easterEgg);
+            
+            // Supprimer l'élément après l'animation
+            setTimeout(() => {
+                easterEgg.remove();
+            }, 2000);
+        }
+
+        // Easter egg: clic sur le titre
+        const titleElement = document.querySelector('h1');
+        if (titleElement) {
+            titleElement.addEventListener('click', () => {
+                playClickSound();
+            });
+        }
 
         // Fonction pour ajouter des vidéos dynamiquement
         function addVideo(title, url) {
