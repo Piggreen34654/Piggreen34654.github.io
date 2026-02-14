@@ -182,6 +182,8 @@
             width: 100%;
             height: 200px;
             background: linear-gradient(135deg, rgba(255, 0, 150, 0.3), rgba(200, 0, 100, 0.3));
+            background-size: cover;
+            background-position: center;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -194,7 +196,9 @@
             content: '▶';
             position: absolute;
             font-size: 4rem;
-            opacity: 0.3;
+            opacity: 0.6;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            z-index: 1;
         }
 
         .video-info {
@@ -332,7 +336,7 @@
                     - "https://youtube.com/watch?v=..." par le lien YouTube de votre vidéo
                     -->
                     <div class="video-card">
-                        <div class="video-thumbnail"></div>
+                        <div class="video-thumbnail" style="background-image: url('https://img.youtube.com/vi/GEd6GK6w_8I/maxresdefault.jpg')"></div>
                         <div class="video-info">
                             <div class="video-title">Custom Sounds Brstms</div>
                             <a href="https://www.youtube.com/watch?v=GEd6GK6w_8I&t=2s" class="video-link" target="_blank">Voir sur YouTube →</a>
@@ -433,11 +437,16 @@
 
         // Fonction pour ajouter des vidéos dynamiquement
         function addVideo(title, url) {
+            // Extraire l'ID de la vidéo YouTube
+            const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+            const videoId = videoIdMatch ? videoIdMatch[1] : '';
+            const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : '';
+            
             const videoGrid = document.getElementById('videoGrid');
             const videoCard = document.createElement('div');
             videoCard.className = 'video-card';
             videoCard.innerHTML = `
-                <div class="video-thumbnail"></div>
+                <div class="video-thumbnail" style="background-image: url('${thumbnailUrl}')"></div>
                 <div class="video-info">
                     <div class="video-title">${title}</div>
                     <a href="${url}" class="video-link" target="_blank">Voir sur YouTube →</a>
