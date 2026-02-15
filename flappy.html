@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Flappy — Piggreen</title>
+    <style>
+        html,body{height:100%;margin:0}
+        body{display:flex;align-items:center;justify-content:center;background:#000}
+        canvas{display:block;background:#000;max-width:100%;height:auto}
+        .center{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+        .note{position:fixed;top:10px;left:10px;color:#fff;font-family:Inter,system-ui,sans-serif}
+    </style>
+</head>
+<body>
+    <div class="note">Clique ou appuie sur espace pour faire sauter l'oiseau. Appuie sur R pour recommencer.</div>
+    <div class="center">
+        <canvas id="game" width="720" height="540"></canvas>
+    </div>
+
+    <script>
+    (function(){
+        const canvas = document.getElementById('game');
+        const ctx = canvas.getContext('2d');
+        const W = canvas.width, H = canvas.height;
+
+        // Assets (raw.githubusercontent URLs)
+        const bgUrl = 'https://raw.githubusercontent.com/Piggreen34654/Piggreen34654.github.io/main/bg/7.png';
+        const birdUrl = 'https://raw.githubusercontent.com/Piggreen34654/Piggreen34654.github.io/main/img/CANAL%20PLUS%20Logo.png';
+        const pipeUrl = 'https://raw.githubusercontent.com/Piggreen34654/Piggreen34654.github.io/main/img/Pipe.png';
+
+        const bgImg = new Image(); bgImg.src = bgUrl;
+        const birdImg = new Image(); birdImg.src = birdUrl;
+        const pipeImg = new Image(); pipeImg.src = pipeUrl;
+
+        let frames=0, score=0, best=0, running=true;
+
+        // Bird
+        const bird = { x: 140, y: H/2, w:48, h:48, vy:0, gravity:0.45, lift:-8, rot:0 };
+
+        // Pipes
+        const pipes = [];
+        const gap = 140;
+        const pipeSpeed = 2.6;
+
+        function spawnPipe(){
+            const topH = 80 + Math.random()*(H - 300);
+            pipes.push({ x: W + 20, topH });
+        }
+
+        function reset(){
+            pipes.length = 0; frames=0; score=0; running=true;
+            bird.y = H/2; bird.vy=0;
+        }
+
+        function update(){
+            if(!running) return;
+            frames++;
+            // bird physics
+            bird.vy += bird.gravity;
+            bird.y += bird.vy;
+            bird.rot = Math.min(Math.PI/4, bird.vy/10);
+
+            if(bird.y + bird.h/2 >= H){ bird.y = H - bird.h/2; bird.vy = 0; running=false }
+            if(bird.y - bird.h/2 <= 0){ bird.y = bird.h/2; bird.vy = 0 }
+
+            // pipes
+            if(frames % 100 === 0) spawnPipe();
+            for(let i=pipes.length-1;i>=0;i--){
+                pipes[i].x -= pipeSpeed;
+                // score check
+                if(!pipes[i].passed && pipes[i].x + 60 < bird.x){ pipes[i].passed = true; score++; if(score>best) best=score }
+                if(pipes[i].x < -80) pipes.splice(i,1);
+            }
+
+            // collisions
+            for(const p of pipes){
+                const pipeW = 80;
+                const bx = bird.x, by = bird.y, bw=bird.w, bh=bird.h;
+                // top pipe rect
+                const topRect = { x:p.x, y:0, w:pipeW, h:p.topH };
+                const botRect = { x:p.x, y:p.topH+gap, w:pipeW, h:H - (p.topH+gap) };
+                if(rectIntersect(bx-bw/2,by-bh/2,bw,bh, topRect.x,topRect.y,topRect.w,topRect.h) || rectIntersect(bx-bw/2,by-bh/2,bw,bh, botRect.x,botRect.y,botRect.w,botRect.h)){
+                    running=false;
+                }
+            }
+        }
+
+        function rectIntersect(x1,y1,w1,h1,x2,y2,w2,h2){
+            return x1 < x2+w2 && x1+w1 > x2 && y1 < y2+h2 && y1+h1 > y2;
+        }
+
+        function draw(){
+            // background
+            if(bgImg.complete){
+                ctx.drawImage(bgImg,0,0,W,H);
+            } else {
+                ctx.fillStyle = '#2b2b2b'; ctx.fillRect(0,0,W,H);
+            }
+
+            // pipes
+            for(const p of pipes){
+                const pipeW = 80;
+                const topH = p.topH;
+                // draw top pipe (flip)
+                if(pipeImg.complete){
+                    // top
+                    ctx.save();
+                    ctx.translate(p.x + pipeW/2, topH/2);
+                    ctx.scale(1,-1);
+                    ctx.drawImage(pipeImg, -pipeW/2, -(topH/1.05), pipeW, topH);
+                    ctx.restore();
+                    // bottom
+                    ctx.drawImage(pipeImg, p.x, topH + gap, pipeW, H - (topH + gap));
+                } else {
+                    ctx.fillStyle='#2aa33a'; ctx.fillRect(p.x,0,pipeW,topH);
+                    ctx.fillRect(p.x,topH+gap,pipeW,H-(topH+gap));
+                }
+            }
+
+            // bird
+            ctx.save();
+            ctx.translate(bird.x, bird.y);
+            ctx.rotate(bird.rot);
+            if(birdImg.complete) ctx.drawImage(birdImg, -bird.w/2, -bird.h/2, bird.w, bird.h);
+            else { ctx.fillStyle='#ffd200'; ctx.fillRect(-bird.w/2,-bird.h/2,bird.w,bird.h) }
+            ctx.restore();
+
+            // score
+            ctx.fillStyle='rgba(0,0,0,0.5)'; ctx.fillRect(10,10,140,44);
+            ctx.fillStyle='#fff'; ctx.font='20px Inter, Arial'; ctx.fillText('Score: '+score,20,36);
+            ctx.fillText('Best: '+best,110,36);
+
+            if(!running){
+                ctx.fillStyle='rgba(0,0,0,0.6)'; ctx.fillRect(W/2-160,H/2-60,320,120);
+                ctx.fillStyle='#fff'; ctx.font='24px Inter, Arial'; ctx.textAlign='center';
+                ctx.fillText('Game Over',W/2,H/2-10);
+                ctx.font='18px Inter, Arial'; ctx.fillText('Appuie sur R pour rejouer',W/2,H/2+24);
+                ctx.textAlign='start';
+            }
+        }
+
+        function loop(){ update(); draw(); requestAnimationFrame(loop); }
+        loop();
+
+        // Controls
+        function flap(){ if(!running) return; bird.vy = bird.lift }
+        window.addEventListener('mousedown', ()=>{ if(!running) return; flap(); });
+        window.addEventListener('touchstart', (e)=>{ e.preventDefault(); if(!running) return; flap(); }, {passive:false});
+        window.addEventListener('keydown', (e)=>{
+            if(e.code === 'Space'){ e.preventDefault(); if(running) flap(); }
+            if(e.key === 'r' || e.key === 'R'){ reset(); }
+        });
+
+        // allow flapping even when game over to restart small
+        canvas.addEventListener('click', ()=>{ if(!running) reset(); });
+
+        // simple splash: start with one pipe
+        spawnPipe();
+
+    })();
+    </script>
+</body>
+</html>
