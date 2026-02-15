@@ -187,10 +187,25 @@
         .content-section {
             background: rgba(0, 0, 0, 0.3);
             border-radius: 20px;
+            position: relative;
             padding: 40px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Image de collection positionnée en bas à droite de la section Modding */
+        .collection-image {
+            position: absolute;
+            right: 24px;
+            bottom: 24px;
+            width: 140px;
+            max-width: 25%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.02);
         }
 
         .video-grid {
@@ -413,6 +428,7 @@
                         <a href="https://gamebanana.com/members/2960112" class="mod-link" target="_blank">Télécharger →</a>
                     </div>
                 </div>
+                <img src="https://raw.githubusercontent.com/Piggreen34654/Piggreen34654.github.io/main/img/Collection.png" alt="Voici ma collection" class="collection-image">
             </div>
         </div>
 
