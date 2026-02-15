@@ -358,35 +358,6 @@
                 grid-template-columns: 1fr;
             }
         }
-        /* Badge collection (affiché uniquement pour l'onglet Modding) */
-        #collectionBadge {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 90px;
-            height: 90px;
-            padding: 6px;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
-            cursor: pointer;
-            z-index: 10000;
-            display: none;
-            border: 2px solid rgba(255,255,255,0.15);
-            background: rgba(0,0,0,0.08);
-            backdrop-filter: blur(4px);
-        }
-        #collectionBadge img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            border-radius: 8px;
-            pointer-events: none;
-        }
-        #collectionBadge:hover {
-            transform: translateY(-4px);
-            transition: transform 0.15s ease;
-        }
     </style>
 </head>
 <body>
@@ -440,9 +411,6 @@
                     </div>
                 </div>
             </div>
-            <div id="collectionBadge" aria-label="Ma Collection" title="Ma Collection">
-                <img src="img/Collection.png" alt="Ma Collection">
-            </div>
         </div>
 
         <div class="tab-content" id="about">
@@ -474,7 +442,6 @@
         // Gestion des onglets
         const tabButtons = document.querySelectorAll('.tab-button');
         const tabContents = document.querySelectorAll('.tab-content');
-        const collectionBadge = document.getElementById('collectionBadge');
 
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
@@ -487,23 +454,8 @@
                 // Ajouter la classe active au bouton cliqué et au contenu correspondant
                 button.classList.add('active');
                 document.getElementById(targetTab).classList.add('active');
-
-                // Afficher/masquer le badge collection selon l'onglet actif
-                if (collectionBadge) {
-                    collectionBadge.style.display = (targetTab === 'modding') ? 'block' : 'none';
-                }
             });
         });
-
-        // Initialisation de la visibilité du badge au chargement
-        if (collectionBadge) {
-            collectionBadge.style.display = document.getElementById('modding').classList.contains('active') ? 'block' : 'none';
-
-            // Clic sur le badge → afficher le chemin et le message
-            collectionBadge.addEventListener('click', () => {
-                alert("Voici ma Collection\nC:\\Users\\matia\\Desktop\\Github.io\\img\\Collection.png");
-            });
-        }
 
         // Gestion de la musique
         const musicToggle = document.getElementById('musicToggle');
