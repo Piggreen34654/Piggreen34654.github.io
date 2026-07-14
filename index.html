@@ -375,6 +375,75 @@
             margin-bottom: 8px;
         }
 
+        .pictures-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .pictures-submenu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .picture-submenu-button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-align: left;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .picture-submenu-button:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(4px);
+        }
+
+        .picture-submenu-button.active {
+            background: rgba(255, 0, 150, 0.35);
+            border-color: rgba(255, 0, 150, 0.7);
+            box-shadow: 0 4px 15px rgba(255, 0, 150, 0.25);
+        }
+
+        .picture-panel {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .picture-panel.active {
+            display: block;
+        }
+
+        .picture-display {
+            width: 100%;
+            max-height: 520px;
+            object-fit: contain;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.25);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .picture-caption {
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            font-style: italic;
+        }
+
+        .picture-caption p {
+            margin-bottom: 6px;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.8rem;
@@ -396,6 +465,20 @@
             .mods-grid {
                 grid-template-columns: 1fr;
             }
+
+            .pictures-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .pictures-submenu {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .picture-submenu-button {
+                flex: 1 1 calc(50% - 5px);
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -412,6 +495,7 @@
         <div class="tabs">
             <button class="tab-button active" data-tab="videos">Vidéos YouTube</button>
             <button class="tab-button" data-tab="modding">Modding</button>
+            <button class="tab-button" data-tab="pictures">Pictures</button>
             <button class="tab-button" data-tab="about">À propos de moi</button>
         </div>
 
@@ -452,6 +536,120 @@
             </div>
         </div>
 
+        <div class="tab-content" id="pictures">
+            <div class="content-section">
+                <h2 class="section-title">Mes Créations</h2>
+                <p class="section-subtitle">Parcourez mes créations de modding en images</p>
+
+                <div class="pictures-layout">
+                    <nav class="pictures-submenu">
+                        <button class="picture-submenu-button active" data-picture="picture-1">Création 1</button>
+                        <button class="picture-submenu-button" data-picture="picture-2">Création 2</button>
+                        <button class="picture-submenu-button" data-picture="picture-3">Création 3</button>
+                        <button class="picture-submenu-button" data-picture="picture-4">Création 4</button>
+                        <button class="picture-submenu-button" data-picture="picture-5">Création 5</button>
+                        <button class="picture-submenu-button" data-picture="picture-6">Création 6</button>
+                        <button class="picture-submenu-button" data-picture="picture-7">Création 7</button>
+                        <button class="picture-submenu-button" data-picture="picture-8">Création 8</button>
+                        <button class="picture-submenu-button" data-picture="picture-9">Création 9</button>
+                    </nav>
+
+                    <div class="picture-viewer">
+                        <!-- Création 1 — modifie le texte ci-dessous pour chaque image -->
+                        <div class="picture-panel active" id="picture-1">
+                            <img class="picture-display" src="picture/530-90_65fb3fb8cb1e9.jpg" alt="Création 1">
+                            <div class="picture-caption">
+                                <p>Nom du mod : Kurt Angle Stare Goomba Boss</p>
+                                <p>Jeu : Paper Mario Sticker Star</p>
+                                <p>Console : Nintendo 3DS</p>
+                                <p>Mod : Public</p>
+                            </div>
+                        </div>
+
+                        <div class="picture-panel" id="picture-2">
+                            <img class="picture-display" src="picture/530-90_6646065c10728.jpg" alt="Création 2">
+                            <div class="picture-caption">
+                                <p>Nom du mod : The Shy Bandit Cyan Npc Card</p>
+                                <p>Jeu : Paper Mario Color Splash</p>
+                                <p>Console : Wii U</p>
+                                <p>Mod : Public</p>
+                            </div>
+                        </div>
+
+                        <div class="picture-panel" id="picture-3">
+                            <img class="picture-display" src="picture/696fe422dc4a1.jpg" alt="Création 3">
+                            <div class="picture-caption">
+                                <p>Nom du mod : Bubbles over Yoshi Ballon</p>
+                                <p>Jeu : New Super Mario Bros U</p>
+                                <p>Console : Wii U</p>
+                                <p>Mod : Public</p>
+                            </div>
+                        </div>
+
+                        <div class="picture-panel" id="picture-4">
+                            <img class="picture-display" src="picture/6995e498b2e72.jpg" alt="Création 4">
+                            <div class="picture-caption">
+                                <p>Nom du mod : Turning Red Dark Bloo Inn (Textures Mod)</p>
+                                <p>Jeu : Paper Mario Color Splash</p>
+                                <p>Console : Wii U</p>
+                                <p>Mod : Public</p>
+                            </div>
+                        </div>
+
+                        <div class="picture-panel" id="picture-5">
+                            <img class="picture-display" src="picture/699a3fed9488a.jpg" alt="Création 5">
+                            <div class="picture-caption">
+                                <p>Nom du mod : Mario Tanuki 3D Land Outfit</p>
+                                <p>Jeu : New Super Mario Bros 2</p>
+                                <p>Console : Nintendo 3DS</p>
+                                <p>Mod : Public</p>
+                            </div>
+                        </div>
+
+                        <div class="picture-panel" id="picture-6">
+                            <img class="picture-display" src="picture/6a24133c57412.jpg" alt="Création 6">
+                            <div class="picture-caption">
+                                <p>Nom du mod : Whitey (Bear Alpha) over Jigglypuff</p>
+                                <p>Jeu : Super Smash Bros Ultimate</p>
+                                <p>Console : Nintendo Switch</p>
+                                <p>Mod : Public</p>
+                            </div>
+                        </div>
+
+                        <div class="picture-panel" id="picture-7">
+                            <img class="picture-display" src="picture/6a288a7167a75.jpg" alt="Création 7">
+                            <div class="picture-caption">
+                                <p>Nom du mod : Rizcochet Boss Fight over Petey Piranha</p>
+                                <p>Jeu : Paper Mario Color Splash</p>
+                                <p>Console : Wii U</p>
+                                <p>Mod : Public</p>
+                            </div>
+                        </div>
+
+                        <div class="picture-panel" id="picture-8">
+                            <img class="picture-display" src="picture/6a2ee777d51cb.jpg" alt="Création 8">
+                            <div class="picture-caption">
+                                <p>Nom du mod : Noob (Roblox) over Bowser</p>
+                                <p>Jeu : New Super Mario Bros Wii</p>
+                                <p>Console : Wii</p>
+                                <p>Mod : Public</p>
+                            </div>
+                        </div>
+
+                        <div class="picture-panel" id="picture-9">
+                            <img class="picture-display" src="picture/Capture%20d'%C3%A9cran%202026-07-14%20072832.jpg" alt="Création 9">
+                            <div class="picture-caption">
+                                <p>Nom du mod : Noob (Roblox) over Rubber band</p>
+                                <p>Jeu : Paper Mario The Origami King</p>
+                                <p>Console : Nintendo Switch</p>
+                                <p>Mod : Privé</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="tab-content" id="about">
             <div class="content-section">
                 <h2 class="section-title">À propos de moi</h2>
@@ -474,7 +672,7 @@
         </div>
 
     <audio id="backgroundMusic" loop>
-        <source src="https://nu.vgmtreasurechest.com/soundtracks/mario-hoops-3-on-3-nintendo-ds/oefofhvg/01.%20Theme%20of%20Mario%20Basketball.mp3" type="audio/mpeg">
+        <source src="music/06%20Character%20Select.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -493,6 +691,22 @@
                 // Ajouter la classe active au bouton cliqué et au contenu correspondant
                 button.classList.add('active');
                 document.getElementById(targetTab).classList.add('active');
+            });
+        });
+
+        // Sous-menu Pictures
+        const pictureButtons = document.querySelectorAll('.picture-submenu-button');
+        const picturePanels = document.querySelectorAll('.picture-panel');
+
+        pictureButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetPicture = button.getAttribute('data-picture');
+
+                pictureButtons.forEach(btn => btn.classList.remove('active'));
+                picturePanels.forEach(panel => panel.classList.remove('active'));
+
+                button.classList.add('active');
+                document.getElementById(targetPicture).classList.add('active');
             });
         });
 
