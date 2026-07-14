@@ -297,6 +297,16 @@
             text-shadow: 0 0 10px rgba(255, 0, 150, 0.8);
         }
 
+        .video-status {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .video-status.error {
+            color: rgba(255, 120, 120, 0.95);
+        }
+
         .mods-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -503,22 +513,8 @@
             <div class="content-section">
                 <h2 class="section-title">Mes Vidéos YouTube</h2>
                 <p class="section-subtitle">Découvrez mes dernières créations vidéo</p>
-                <div class="video-grid" id="videoGrid">
-                    <div class="video-card">
-                        <div class="video-thumbnail" style="background-image: url('https://img.youtube.com/vi/GEd6GK6w_8I/maxresdefault.jpg')"></div>
-                        <div class="video-info">
-                            <div class="video-title">Custom Sounds Brstms</div>
-                            <a href="https://www.youtube.com/watch?v=GEd6GK6w_8I&t=2s" class="video-link" target="_blank">Voir sur YouTube →</a>
-                        </div>
-                    </div>
-                    <div class="video-card">
-                        <div class="video-thumbnail" style="background-image: url('https://img.youtube.com/vi/G0R3L5x_Snc/maxresdefault.jpg')"></div>
-                        <div class="video-info">
-                            <div class="video-title">TUTO COMMENT JOUER SUR EN LIGNE SUR AZAHAR EN 2025</div>
-                            <a href="https://www.youtube.com/watch?v=G0R3L5x_Snc&t=8s" class="video-link" target="_blank">Voir sur YouTube →</a>
-                        </div>
-                    </div>
-                </div>
+                <p class="video-status" id="videoStatus">Chargement des vidéos...</p>
+                <div class="video-grid" id="videoGrid"></div>
             </div>
         </div>
 
@@ -777,28 +773,86 @@
             });
         }
 
-        // Fonction pour ajouter des vidéos dynamiquement
-        function addVideo(title, url) {
-            // Extraire l'ID de la vidéo YouTube
-            const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
-            const videoId = videoIdMatch ? videoIdMatch[1] : '';
-            const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : '';
-            
-            const videoGrid = document.getElementById('videoGrid');
+        function escapeHtml(text) {
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function getYouTubeVideoId(url) {
+            const match = String(url).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+            return match ? match[1] : '';
+        }
+
+        function createVideoCard(video) {
+            const videoId = video.id || getYouTubeVideoId(video.url);
+            const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+            const videoUrl = video.url || `https://www.youtube.com/watch?v=${videoId}`;
             const videoCard = document.createElement('div');
             videoCard.className = 'video-card';
             videoCard.innerHTML = `
                 <div class="video-thumbnail" style="background-image: url('${thumbnailUrl}')"></div>
                 <div class="video-info">
-                    <div class="video-title">${title}</div>
-                    <a href="${url}" class="video-link" target="_blank">Voir sur YouTube →</a>
+                    <div class="video-title">${escapeHtml(video.title)}</div>
+                    <a href="${escapeHtml(videoUrl)}" class="video-link" target="_blank" rel="noopener noreferrer">Voir sur YouTube →</a>
                 </div>
             `;
-            videoGrid.appendChild(videoCard);
+            return videoCard;
         }
-        // Exemples d'utilisation (vous pouvez les supprimer et ajouter vos propres vidéos/mods)
-        // addVideo('Ma Super Vidéo', 'https://youtube.com/watch?v=...');
-        // addMod('Mon Super Mod', 'Description du mod', 'https://lien-vers-mod.com');
+
+        function renderVideos(videos) {
+            const videoGrid = document.getElementById('videoGrid');
+            const videoStatus = document.getElementById('videoStatus');
+
+            videoGrid.innerHTML = '';
+
+            if (!videos.length) {
+                videoStatus.textContent = 'Aucune vidéo disponible pour le moment.';
+                return;
+            }
+
+            videos.forEach(video => {
+                videoGrid.appendChild(createVideoCard(video));
+            });
+
+            videoStatus.textContent = `${videos.length} vidéo${videos.length > 1 ? 's' : ''} — mises à jour automatiquement depuis YouTube`;
+        }
+
+        function sortVideos(videos) {
+            return [...videos].sort((a, b) => {
+                const orderA = typeof a.channelOrder === 'number' ? a.channelOrder : 9999;
+                const orderB = typeof b.channelOrder === 'number' ? b.channelOrder : 9999;
+
+                if (orderA !== orderB) {
+                    return orderA - orderB;
+                }
+
+                return String(b.addedAt || '').localeCompare(String(a.addedAt || ''));
+            });
+        }
+
+        async function loadYouTubeVideos() {
+            const videoStatus = document.getElementById('videoStatus');
+
+            try {
+                const response = await fetch('videos.json', { cache: 'no-store' });
+                if (!response.ok) {
+                    throw new Error('Impossible de charger videos.json');
+                }
+
+                const data = await response.json();
+                renderVideos(sortVideos(data.videos || []));
+            } catch (error) {
+                console.error(error);
+                videoStatus.textContent = 'Impossible de charger les vidéos pour le moment.';
+                videoStatus.classList.add('error');
+            }
+        }
+
+        loadYouTubeVideos();
     </script>
 </body>
 </html>
