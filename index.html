@@ -387,27 +387,71 @@
 
         .pictures-layout {
             display: grid;
-            grid-template-columns: 260px 1fr;
+            grid-template-columns: 320px 1fr;
             gap: 30px;
             margin-top: 20px;
+            align-items: start;
         }
 
         .pictures-submenu {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 14px;
+        }
+
+        .game-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .game-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 10px;
+            margin-bottom: 2px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .game-logo {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.28);
+            flex-shrink: 0;
+        }
+
+        .game-name {
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.92rem;
+            line-height: 1.25;
+        }
+
+        .game-console {
+            margin-top: 3px;
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 0.78rem;
+            font-weight: 500;
         }
 
         .picture-submenu-button {
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(255, 255, 255, 0.15);
             color: #fff;
-            padding: 12px 16px;
+            padding: 10px 12px;
             border-radius: 10px;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 0.86rem;
             font-weight: 500;
             text-align: left;
+            line-height: 1.35;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
         }
@@ -421,6 +465,11 @@
             background: rgba(255, 0, 150, 0.35);
             border-color: rgba(255, 0, 150, 0.7);
             box-shadow: 0 4px 15px rgba(255, 0, 150, 0.25);
+        }
+
+        .picture-viewer {
+            position: sticky;
+            top: 20px;
         }
 
         .picture-panel {
@@ -480,14 +529,16 @@
                 grid-template-columns: 1fr;
             }
 
+            .picture-viewer {
+                position: static;
+            }
+
             .pictures-submenu {
-                flex-direction: row;
-                flex-wrap: wrap;
+                flex-direction: column;
             }
 
             .picture-submenu-button {
-                flex: 1 1 calc(50% - 5px);
-                text-align: center;
+                width: 100%;
             }
         }
     </style>
@@ -535,19 +586,93 @@
         <div class="tab-content" id="pictures">
             <div class="content-section">
                 <h2 class="section-title">Mes Créations</h2>
-                <p class="section-subtitle">Parcourez mes créations de modding en images</p>
+                <p class="section-subtitle">Parcourez mes créations de modding, classées par jeu</p>
 
+                <!-- Logos : place tes images dans le dossier logos/ (png). Noms attendus :
+                     paper-mario-sticker-star.png, paper-mario-color-splash.png,
+                     new-super-mario-bros-u.png, new-super-mario-bros-2.png,
+                     super-smash-bros-ultimate.png, new-super-mario-bros-wii.png,
+                     paper-mario-the-origami-king.png -->
                 <div class="pictures-layout">
                     <nav class="pictures-submenu">
-                        <button class="picture-submenu-button active" data-picture="picture-1">Création 1</button>
-                        <button class="picture-submenu-button" data-picture="picture-2">Création 2</button>
-                        <button class="picture-submenu-button" data-picture="picture-3">Création 3</button>
-                        <button class="picture-submenu-button" data-picture="picture-4">Création 4</button>
-                        <button class="picture-submenu-button" data-picture="picture-5">Création 5</button>
-                        <button class="picture-submenu-button" data-picture="picture-6">Création 6</button>
-                        <button class="picture-submenu-button" data-picture="picture-7">Création 7</button>
-                        <button class="picture-submenu-button" data-picture="picture-8">Création 8</button>
-                        <button class="picture-submenu-button" data-picture="picture-9">Création 9</button>
+                        <div class="game-group">
+                            <div class="game-header">
+                                <img class="game-logo" src="logos/paper-mario-sticker-star.png" alt="Paper Mario Sticker Star" onerror="this.remove()">
+                                <div>
+                                    <div class="game-name">Paper Mario Sticker Star</div>
+                                    <div class="game-console">Nintendo 3DS</div>
+                                </div>
+                            </div>
+                            <button class="picture-submenu-button active" data-picture="picture-1">Kurt Angle Stare Goomba Boss</button>
+                        </div>
+
+                        <div class="game-group">
+                            <div class="game-header">
+                                <img class="game-logo" src="logos/paper-mario-color-splash.png" alt="Paper Mario Color Splash" onerror="this.remove()">
+                                <div>
+                                    <div class="game-name">Paper Mario Color Splash</div>
+                                    <div class="game-console">Wii U</div>
+                                </div>
+                            </div>
+                            <button class="picture-submenu-button" data-picture="picture-2">The Shy Bandit Cyan Npc Card</button>
+                            <button class="picture-submenu-button" data-picture="picture-4">Turning Red Dark Bloo Inn</button>
+                            <button class="picture-submenu-button" data-picture="picture-7">Rizcochet Boss Fight over Petey Piranha</button>
+                        </div>
+
+                        <div class="game-group">
+                            <div class="game-header">
+                                <img class="game-logo" src="logos/new-super-mario-bros-u.png" alt="New Super Mario Bros. U" onerror="this.remove()">
+                                <div>
+                                    <div class="game-name">New Super Mario Bros. U</div>
+                                    <div class="game-console">Wii U</div>
+                                </div>
+                            </div>
+                            <button class="picture-submenu-button" data-picture="picture-3">Bubbles over Yoshi Ballon</button>
+                        </div>
+
+                        <div class="game-group">
+                            <div class="game-header">
+                                <img class="game-logo" src="logos/new-super-mario-bros-2.png" alt="New Super Mario Bros. 2" onerror="this.remove()">
+                                <div>
+                                    <div class="game-name">New Super Mario Bros. 2</div>
+                                    <div class="game-console">Nintendo 3DS</div>
+                                </div>
+                            </div>
+                            <button class="picture-submenu-button" data-picture="picture-5">Mario Tanuki 3D Land Outfit</button>
+                        </div>
+
+                        <div class="game-group">
+                            <div class="game-header">
+                                <img class="game-logo" src="logos/super-smash-bros-ultimate.png" alt="Super Smash Bros. Ultimate" onerror="this.remove()">
+                                <div>
+                                    <div class="game-name">Super Smash Bros. Ultimate</div>
+                                    <div class="game-console">Nintendo Switch</div>
+                                </div>
+                            </div>
+                            <button class="picture-submenu-button" data-picture="picture-6">Whitey (Bear Alpha) over Jigglypuff</button>
+                        </div>
+
+                        <div class="game-group">
+                            <div class="game-header">
+                                <img class="game-logo" src="logos/new-super-mario-bros-wii.png" alt="New Super Mario Bros. Wii" onerror="this.remove()">
+                                <div>
+                                    <div class="game-name">New Super Mario Bros. Wii</div>
+                                    <div class="game-console">Wii</div>
+                                </div>
+                            </div>
+                            <button class="picture-submenu-button" data-picture="picture-8">Noob (Roblox) over Bowser</button>
+                        </div>
+
+                        <div class="game-group">
+                            <div class="game-header">
+                                <img class="game-logo" src="logos/paper-mario-the-origami-king.png" alt="Paper Mario: The Origami King" onerror="this.remove()">
+                                <div>
+                                    <div class="game-name">Paper Mario: The Origami King</div>
+                                    <div class="game-console">Nintendo Switch</div>
+                                </div>
+                            </div>
+                            <button class="picture-submenu-button" data-picture="picture-9">Noob (Roblox) over Rubber band</button>
+                        </div>
                     </nav>
 
                     <div class="picture-viewer">
